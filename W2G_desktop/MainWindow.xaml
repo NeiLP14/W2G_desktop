@@ -1,0 +1,23 @@
+﻿<Window x:Class="W2G_desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="W2G Desktop" Height="450" Width="800"
+        Loaded="MainWindow_Loaded">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+            <Button x:Name="CreateUserButton" Content="Créer un utilisateur" Width="150" Height="30" Margin="0,0,10,0"
+                    Click="CreateUserButton_Click"/>
+            <Button x:Name="CustomersButton" Content="Liste des clients" Width="150" Height="30" Click="CustomersButton_Click"/>
+            <Button x:Name="ReservationsButton" Content="Réservations" Width="150" Height="30" Margin="0,0,10,0"
+                    Click="ReservationsButton_Click"/>
+        </StackPanel>
+
+        <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>
