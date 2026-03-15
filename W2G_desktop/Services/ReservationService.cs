@@ -17,27 +17,41 @@ namespace W2G_desktop.Services
             using var conn = new MySqlConnection(connectionString);
             conn.Open();
 
-            string query = "SELECT id, user_id, bay_id, start_time, end_time, status FROM reservation";
-            var cmd = new MySqlCommand(query, conn);
+            string query = @"
+                SELECT 
+                    r.id,
+                    r.user_id,
+                    r.offre_id,
+                    r.date_deb,
+                    r.date_fin,
+                    u.username,
+                    o.label AS offre
+                FROM reservation r
+                JOIN user u ON r.user_id = u.id
+                JOIN offre o ON r.offre_id = o.id
+            ";
 
+            using var cmd = new MySqlCommand(query, conn);
             using var reader = cmd.ExecuteReader();
+
             while (reader.Read())
             {
                 reservations.Add(new Reservation
                 {
                     Id = reader.GetInt32("id"),
                     UserId = reader.GetInt32("user_id"),
-                    BayId = reader.GetInt32("bay_id"),
-                    StartTime = reader.GetDateTime("start_time"),
-                    EndTime = reader.GetDateTime("end_time"),
-                    Status = reader.GetString("status")
+                    OffreId = reader.GetInt32("offre_id"),
+                    DateDeb = reader.GetDateTime("date_deb"),
+                    DateFin = reader.GetDateTime("date_fin"),
+                    Username = reader.GetString("username"),
+                    Offre = reader.GetString("offre")
                 });
             }
 
             return reservations;
         }
 
-        // Optionnel : récupérer les réservations pour un utilisateur spécifique
+        // Récupérer les réservations d’un utilisateur
         public List<Reservation> GetReservationsByUser(int userId)
         {
             List<Reservation> reservations = new List<Reservation>();
@@ -45,21 +59,37 @@ namespace W2G_desktop.Services
             using var conn = new MySqlConnection(connectionString);
             conn.Open();
 
-            string query = "SELECT id, user_id, bay_id, start_time, end_time, status FROM reservation WHERE user_id=@UserId";
-            var cmd = new MySqlCommand(query, conn);
+            string query = @"
+                SELECT 
+                    r.id,
+                    r.user_id,
+                    r.offre_id,
+                    r.date_deb,
+                    r.date_fin,
+                    u.username,
+                    o.label AS offre
+                FROM reservation r
+                JOIN user u ON r.user_id = u.id
+                JOIN offre o ON r.offre_id = o.id
+                WHERE r.user_id = @UserId
+            ";
+
+            using var cmd = new MySqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@UserId", userId);
 
             using var reader = cmd.ExecuteReader();
+
             while (reader.Read())
             {
                 reservations.Add(new Reservation
                 {
                     Id = reader.GetInt32("id"),
                     UserId = reader.GetInt32("user_id"),
-                    BayId = reader.GetInt32("bay_id"),
-                    StartTime = reader.GetDateTime("start_time"),
-                    EndTime = reader.GetDateTime("end_time"),
-                    Status = reader.GetString("status")
+                    OffreId = reader.GetInt32("offre_id"),
+                    DateDeb = reader.GetDateTime("date_deb"),
+                    DateFin = reader.GetDateTime("date_fin"),
+                    Username = reader.GetString("username"),
+                    Offre = reader.GetString("offre")
                 });
             }
 

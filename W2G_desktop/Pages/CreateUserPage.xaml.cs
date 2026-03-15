@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using W2G_desktop.Models;
 using W2G_desktop.Services;
 
 namespace W2G_desktop.Pages
@@ -7,10 +8,13 @@ namespace W2G_desktop.Pages
     public partial class CreateUserPage : Page
     {
         private UserService userService = new UserService();
+        private User currentUser; // Utilisateur courant
 
-        public CreateUserPage()
+        // Nouveau constructeur prenant l'utilisateur courant
+        public CreateUserPage(User user)
         {
             InitializeComponent();
+            currentUser = user;
         }
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -31,8 +35,9 @@ namespace W2G_desktop.Pages
             if (success)
             {
                 MessageBox.Show("Utilisateur créé avec succès !");
-                // Retour à la page clients après création
-                NavigationService?.Navigate(new CustomersPage());
+
+                // 🔹 Naviguer vers la page UsersPage en passant currentUser
+                NavigationService?.Navigate(new UsersPage(currentUser));
             }
             else
             {

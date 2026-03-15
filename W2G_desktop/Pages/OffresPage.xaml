@@ -1,0 +1,55 @@
+﻿<Page x:Class="W2G_desktop.Pages.OffresPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Offres">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Tableau des offres -->
+        <DataGrid x:Name="OffersGrid"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  Grid.Row="0"
+                  SelectionChanged="OffersGrid_SelectionChanged">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="200"/>
+                <DataGridTextColumn Header="Unités" Binding="{Binding NbUnit}" Width="100"/>
+                <DataGridTextColumn Header="Prix" Binding="{Binding Price}" Width="100"/>
+                <DataGridTextColumn Header="Réduction (%)" Binding="{Binding Reduction}" Width="100"/>
+                <DataGridTextColumn Header="Nb réservations" Binding="{Binding NbReservations}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0">
+
+            <Button x:Name="CreateOfferButton"
+                    Content="Créer une offre"
+                    Width="150"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    Click="CreateOfferButton_Click"/>
+
+            <Button x:Name="EditOfferButton"
+                    Content="Modifier"
+                    Width="150"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    IsEnabled="False"
+                    Click="EditOfferButton_Click"/>
+
+            <Button x:Name="DeleteOfferButton"
+                    Content="Supprimer"
+                    Width="150"
+                    Height="30"
+                    IsEnabled="False"
+                    Click="DeleteOfferButton_Click"/>
+
+        </StackPanel>
+    </Grid>
+</Page>

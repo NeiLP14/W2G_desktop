@@ -15,5 +15,7 @@ namespace W2G_desktop.Models
         public decimal Price { get; set; }
 
         public int Reduction { get; set; }
+
+        public int NbReservations { get; set; }
     }
 }

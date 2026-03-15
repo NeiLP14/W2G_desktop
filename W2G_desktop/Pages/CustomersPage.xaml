@@ -1,8 +1,43 @@
 ﻿<Page x:Class="W2G_desktop.Pages.CustomersPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Clients">
 
     <Grid Margin="10">
-        <DataGrid x:Name="CustomersGrid" AutoGenerateColumns="True"/>
+
+        <DataGrid x:Name="CustomersGrid"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False">
+
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="ID"
+                                    Binding="{Binding Id}"
+                                    Width="60"/>
+
+                <DataGridTextColumn Header="Email"
+                                    Binding="{Binding Email}"
+                                    Width="250"/>
+
+                <DataGridTextColumn Header="Username"
+                                    Binding="{Binding Username}"
+                                    Width="150"/>
+
+                <DataGridTextColumn Header="Type"
+                                    Binding="{Binding Discr}"
+                                    Width="120"/>
+
+                <DataGridTextColumn Header="Nom"
+                                    Binding="{Binding Nom}"
+                                    Width="150"/>
+
+                <DataGridTextColumn Header="Prénom"
+                                    Binding="{Binding Prenom}"
+                                    Width="150"/>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+
     </Grid>
 </Page>

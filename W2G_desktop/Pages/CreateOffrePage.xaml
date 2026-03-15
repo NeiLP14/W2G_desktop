@@ -1,0 +1,46 @@
+﻿<Page x:Class="W2G_desktop.Pages.CreateOffrePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Créer une offre">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <!-- pour les labels -->
+            <ColumnDefinition Width="*"/>
+            <!-- pour les champs -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Label -->
+        <TextBlock Text="Label:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="LabelTextBox" Grid.Row="0" Grid.Column="1" Margin="0,5" Width="250"/>
+
+        <!-- Unités -->
+        <TextBlock Text="Unités:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="NbUnitTextBox" Grid.Row="1" Grid.Column="1" Margin="0,5" Width="250"/>
+
+        <!-- Prix -->
+        <TextBlock Text="Prix:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="PriceTextBox" Grid.Row="2" Grid.Column="1" Margin="0,5" Width="250"/>
+
+        <!-- Réduction -->
+        <TextBlock Text="Réduction (%):" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="ReductionTextBox" Grid.Row="3" Grid.Column="1" Margin="0,5" Width="250"/>
+
+        <!-- Message d'erreur -->
+        <TextBlock x:Name="ErrorTextBlock" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Foreground="Red" Margin="0,5"/>
+
+        <!-- Bouton créer -->
+        <Button Content="Créer" Grid.Row="5" Grid.Column="0" Width="120" Height="30" Margin="0,10,0,0"
+                HorizontalAlignment="Left" Click="CreateButton_Click"/>
+    </Grid>
+</Page>

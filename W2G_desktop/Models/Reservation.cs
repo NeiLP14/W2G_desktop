@@ -1,14 +1,20 @@
-﻿using System;
-
-namespace W2G_desktop.Models
+﻿namespace W2G_desktop.Models
 {
     public class Reservation
     {
         public int Id { get; set; }
+
         public int UserId { get; set; }
-        public int BayId { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public string Status { get; set; }
+
+        public int OffreId { get; set; }
+
+        public DateTime DateDeb { get; set; }
+
+        public DateTime DateFin { get; set; }
+
+        // Champs affichés dans le DataGrid
+        public string Username { get; set; }
+
+        public string Offre { get; set; }
     }
 }

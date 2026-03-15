@@ -3,7 +3,7 @@
 ## 1. Initialisation du projet
 
 * Création d’un projet **C# WPF** nommé `W2G_desktop`.
-* Mise en place de la base de données **MySQL** avec les tables essentielles : `user` et `bay`.
+* Mise en place de la base de données **MySQL** avec les tables essentielles : `user`, `bay`, `offer`, `reservation`.
 * Ajout des références nécessaires pour l'accès à MySQL via `MySql.Data`.
 * Organisation des dossiers et namespaces : `Models`, `Services`, `Pages`.
 
@@ -11,15 +11,35 @@
 
 ## 2. Modèle de données
 
-* Modèle `User` avec propriétés :
+* **User**
 
   * `Id` (int)
   * `Email` (string)
   * `Username` (string)
-  * `Role` (string)
-  * `Discr` (string, pour discriminer type utilisateur)
+  * `Role` (string, JSON)
+  * `Discr` (string, discriminer type utilisateur : `admin`, `technician`, `accountant`, `customer`, `company`)
 
-* Modèle `Bay` (non détaillé ici) pour gérer les emplacements (bays) affichés dans un DataGrid.
+* **Bay**
+
+  * `Id` (int)
+  * `Label` (string, généré automatiquement : `Bay 1`, `Bay 2`, …)
+  * `Size` (int)
+
+* **Offer**
+
+  * `Id` (int)
+  * `Label` (string)
+  * `NbUnit` (int)
+  * `Price` (decimal)
+  * `Reduction` (int, pourcentage)
+
+* **Reservation**
+
+  * `Id` (int)
+  * `UserId` (int)
+  * `OffreId` (int)
+  * `DateDeb` (DateTime)
+  * `DateFin` (DateTime)
 
 ---
 
@@ -27,82 +47,169 @@
 
 * **UserService**
 
-  * Authentification sécurisée avec comparaison du hash BCrypt du mot de passe.
+  * Authentification sécurisée avec hash BCrypt.
   * Vérification de l’existence d’un email.
-  * Création d’un utilisateur avec hashage du mot de passe.
-  * Récupération des clients (rôle `customer` ou `company`).
+  * Création d’un utilisateur avec hashage du mot de passe et assignation automatique du `discr` selon le rôle.
+  * Récupération des clients (`customer` ou `company`) ou tous les utilisateurs (admin).
+  * Mise à jour d’un utilisateur existant.
+  * Suppression d’un utilisateur et de ses réservations associées (transaction sécurisée).
 
 * **BayService**
 
-  * Récupération des bays depuis la base (implémentation simple).
+  * Récupération des baies depuis la base.
+  * Création d’une baie avec label automatique.
+  * Mise à jour et suppression d’une baie.
+
+* **OfferService**
+
+  * Récupération des offres existantes.
+  * Création d’une offre via formulaire admin.
+  * Mise à jour et suppression d’offres.
+
+* **ReservationService**
+
+  * Récupération de toutes les réservations.
+  * Récupération des réservations par utilisateur.
+  * Création, modification et suppression de réservations.
+  * Suppression en cascade lors de la suppression d’un utilisateur.
 
 ---
 
 ## 4. Architecture de l’interface
 
-* Passage d’une architecture basée sur plusieurs **Windows** vers une interface moderne basée sur une seule `MainWindow` avec un **Frame** pour naviguer entre différentes **Pages**.
-* Pages principales développées :
+* **MainWindow** avec un `Frame` pour naviguer entre les pages.
 
-  * `LoginPage` (page de connexion)
-  * `CreateUserPage` (formulaire création utilisateur)
-  * `CustomersPage` (liste clients)
-* `MainWindow` :
+* Navigation centralisée avec boutons :
 
-  * Contient le frame de navigation (`MainFrame`).
-  * Gère l’état utilisateur connecté.
-  * Affiche ou cache les boutons "Créer un utilisateur" et "Liste des clients" selon le rôle (bouton "Créer un utilisateur" visible uniquement pour `ROLE_ADMIN`).
-  * Met à jour le titre de la fenêtre en fonction de l’utilisateur connecté.
+  * `Créer un utilisateur` (admin)
+  * `Liste des clients`
+  * `Réservations`
+  * `Offres` (création visible seulement pour admin)
+  * `Baies` (création visible seulement pour admin)
+
+* Pages principales :
+
+  * `LoginPage` – connexion utilisateur
+  * `UsersPage` – liste et gestion des utilisateurs (Create/Edit/Delete)
+  * `CreateUserPage` – formulaire de création utilisateur
+  * `EditUserPage` – modification des informations utilisateur
+  * `CustomersPage` – liste des clients uniquement
+  * `ReservationsPage` – gestion des réservations
+  * `OffersPage` – liste et gestion des offres
+  * `CreateOffrePage` – formulaire de création d’offre
+  * `BaysPage` – liste et gestion des baies
+  * `CreateBayPage` – création d’une baie avec label automatique
+
+* **MainWindow** :
+
+  * Mise à jour dynamique des boutons selon le rôle via `UpdateMenu()`
+  * Titre de la fenêtre indiquant l’utilisateur connecté et son rôle
 
 ---
 
 ## 5. Flux utilisateur
 
-* Au lancement, `MainWindow` affiche la page `LoginPage` si aucun utilisateur connecté.
-* Après connexion valide (seuls rôles `ADMIN`, `TECHNICIAN`, `ACCOUNTANT` autorisés), la fenêtre met à jour :
+* **Connexion** :
 
-  * Boutons visibles/cachés selon rôle.
-  * Affiche par défaut la page `CustomersPage`.
-* Navigation possible via les boutons pour aller vers la liste des clients ou vers la page de création d’utilisateur.
-* La création d’un utilisateur ne peut être réalisée que par un admin.
+  * Page `LoginPage` affichée si aucun utilisateur connecté.
+  * Vérification des identifiants avec hash BCrypt.
+  * Mise à jour de la navigation et du titre après connexion.
 
----
+* **Actions utilisateur** :
 
-## 6. Gestion des erreurs et messages
+  * Tous les utilisateurs connectés peuvent accéder aux clients, offres, baies et réservations (lecture).
+  * L’admin peut créer, modifier et supprimer des utilisateurs, offres et baies.
+  * L’admin peut visualiser tous les utilisateurs, pas seulement les clients.
 
-* Messages d’erreur clairs dans le formulaire de connexion : mauvais identifiants, accès refusé.
-* Messages d’erreur dans la création utilisateur (ex : email déjà utilisé, champs vides).
-* Utilisation de `MessageBox` pour confirmation de création réussie.
+* **Navigation fluide** via le `Frame` principal pour changer de page.
 
 ---
 
-## 7. Problèmes rencontrés et solutions
+## 6. Gestion des utilisateurs
 
-* **Erreur `InitializeComponent` non trouvé** → vérification des espaces de noms, des noms de classes et du XAML liés.
-* **Ambiguïté sur la classe `User`** → utilisation stricte des namespaces, import de `W2G_desktop.Models`.
-* **Erreur de ressource XAML introuvable** → vérification de la structure du projet et propriétés des fichiers `.xaml` (Build Action = `Page`).
-* **Erreur constructeur manquant sur `MainWindow`** → ajout d’un constructeur sans paramètre obligatoire pour le XAML.
-* **Gestion de la visibilité des boutons selon rôle** dans `MainWindow_Loaded` et méthode publique `SetCurrentUser`.
-* **Migration de `Window` vers `Page` pour login et création utilisateur** pour faciliter la navigation dans le frame principal.
+* **Liste des utilisateurs** (`UsersPage`) :
+
+  * Affiche tous les utilisateurs (admin, technician, accountant, customer, company)
+  * Boutons : `Créer`, `Modifier`, `Supprimer`
+  * Sélection dans le `DataGrid` active `Modifier` et `Supprimer`
+
+* **Création utilisateur** (`CreateUserPage`) :
+
+  * Rôle sélectionnable via `ComboBox`
+  * Discrim automatique selon rôle
+  * MessageBox de confirmation ou TextBlock d’erreur
+
+* **Modification utilisateur** (`EditUserPage`) :
+
+  * Modification des informations et rôle
+  * Mise à jour automatique de la base
+
+* **Suppression utilisateur** :
+
+  * Confirmation via MessageBox
+  * Suppression en cascade des réservations associées
 
 ---
 
-## 8. Points techniques clés et bonnes pratiques
+## 7. Gestion des offres
 
-* Séparation claire de la logique métier (Services) et UI (Pages/Windows).
-* Utilisation du pattern navigation dans un `Frame` pour une UI fluide et modulaire.
-* Gestion explicite des rôles et permissions côté UI.
-* Sécurisation des mots de passe avec BCrypt.
-* Passage d’informations entre pages/fenêtres via constructeur ou méthodes publiques.
-* Gestion des erreurs côté client pour améliorer l’expérience utilisateur.
-* Mise en place d’un système de navigation cohérent et évolutif.
+* **OffersPage** :
+
+  * DataGrid avec `Id`, `Label`, `NbUnit`, `Price`, `Reduction`
+  * Création, modification et suppression d’offres pour admin
+  * Validation des champs avec messages d’erreur
 
 ---
 
-## 9. Améliorations futures possibles
+## 8. Gestion des baies
 
-* Ajout de validation plus poussée côté formulaire (ex : regex email, force mot de passe).
-* Implémentation de la gestion des sessions ou tokens pour améliorer la sécurité.
-* Ajout d’une page d’accueil après connexion avec résumé/dashboards.
-* Gestion des rôles plus dynamique (ex : interface admin pour modifier les rôles).
-* Ajout de logs d’activité et gestion des erreurs plus avancée.
-* Support multi-langue/localisation.
+* **BaysPage** :
+
+  * DataGrid avec `Id`, `Label`, `Size`
+  * Création d’une baie avec label automatique
+  * Modification et suppression pour admin
+
+---
+
+## 9. Gestion des réservations
+
+* Liste des réservations pour tous les utilisateurs.
+* Possibilité de filtrer par utilisateur.
+* Création, modification et suppression de réservations.
+* Suppression en cascade si l’utilisateur est supprimé.
+
+---
+
+## 10. Gestion des erreurs et messages
+
+* Messages d’erreur clairs dans les formulaires :
+
+  * Login : mauvais identifiants
+  * Création/édition utilisateur, offre, baie : champs vides ou invalides
+* MessageBox pour confirmation et succès.
+* Validation côté client avant insertion dans la base.
+
+---
+
+## 11. Points techniques clés
+
+* Séparation logique métier / interface utilisateur (`Services` vs `Pages`).
+* Navigation centralisée via `Frame` dans `MainWindow`.
+* Gestion des rôles et permissions côté UI et service.
+* Uniformisation des `DataGrid` pour tous les modules (colonnes et marges).
+* Transactions pour suppression cascade sécurisée.
+* Génération automatique des labels pour les baies.
+* Hashage des mots de passe avec BCrypt.
+
+---
+
+## 12. Améliorations futures possibles
+
+* Validation plus poussée des champs (regex email, mot de passe fort).
+* Pagination et recherche dans les DataGrid pour grandes tables.
+* Dashboard et statistiques après connexion.
+* Gestion multi-langue / localisation.
+* Gestion avancée des logs et suivi des actions.
+* Gestion dynamique des rôles et permissions (table séparée).
+* Notifications ou alertes pour certaines actions (réservations proches, etc.).
+* Export CSV / PDF des listes (utilisateurs, offres, baies, réservations).
