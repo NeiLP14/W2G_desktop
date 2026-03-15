@@ -22,15 +22,22 @@ namespace W2G_desktop.Pages
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Mettre à jour la baie
             if (int.TryParse(SizeTextBox.Text, out int size))
             {
                 bay.Label = LabelTextBox.Text;
                 bay.Size = size;
 
-                bayService.UpdateBay(bay); // il faut ajouter cette méthode dans BayService
-                MessageBox.Show("Baie mise à jour !");
-                NavigationService?.GoBack();
+                try
+                {
+                    bayService.UpdateBay(bay);
+
+                    MessageBox.Show("Baie mise à jour !");
+                    NavigationService?.GoBack();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             else
             {

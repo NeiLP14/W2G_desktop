@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using W2G_desktop.Models;
 using W2G_desktop.Services;
@@ -8,87 +7,68 @@ namespace W2G_desktop.Pages
 {
     public partial class OffresPage : Page
     {
+        private User currentUser;
         private OfferService offerService = new OfferService();
-        private User? currentUser;
 
-        public OffresPage(User? user = null)
+        public OffresPage(User user)
         {
             InitializeComponent();
             currentUser = user;
+
             LoadOffers();
-            UpdateCreateButton();
+            UpdateUI();
         }
 
         private void LoadOffers()
         {
-            List<Offer> offers = offerService.GetAllOffers();
-            OffersGrid.ItemsSource = offers;
+            // ⚡ Appel correct de la méthode du service
+            OffersGrid.ItemsSource = offerService.GetAllOffers();
         }
 
-        private void UpdateCreateButton()
+        private void UpdateUI()
         {
-            if (currentUser == null || !currentUser.Role.Contains("ROLE_ADMIN"))
-            {
-                CreateOfferButton.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                CreateOfferButton.Visibility = Visibility.Visible;
-            }
-        }
+            // Seul l'admin peut créer, modifier ou supprimer
+            bool isAdmin = currentUser != null && currentUser.Role.Contains("ROLE_ADMIN");
 
-        private void CreateOfferButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Navigue vers la page de création d'offre
-            NavigationService?.Navigate(new CreateOffrePage());
+            CreateOfferButton.Visibility = isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            EditOfferButton.Visibility = isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            DeleteOfferButton.Visibility = isAdmin ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void OffersGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool selected = OffersGrid.SelectedItem != null;
+            bool hasSelection = OffersGrid.SelectedItem != null;
+            bool isAdmin = currentUser != null && currentUser.Role.Contains("ROLE_ADMIN");
 
-            EditOfferButton.IsEnabled = selected;
-            DeleteOfferButton.IsEnabled = selected;
+            // Activer uniquement si admin et qu'une offre est sélectionnée
+            EditOfferButton.IsEnabled = isAdmin && hasSelection;
+            DeleteOfferButton.IsEnabled = isAdmin && hasSelection;
+        }
+
+        private void CreateOfferButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentUser != null)
+                NavigationService?.Navigate(new CreateOffrePage(currentUser));
         }
 
         private void EditOfferButton_Click(object sender, RoutedEventArgs e)
         {
-            Offer selectedOffer = OffersGrid.SelectedItem as Offer;
-
+            var selectedOffer = OffersGrid.SelectedItem as Offer;
             if (selectedOffer != null)
-            {
                 NavigationService?.Navigate(new EditOfferPage(selectedOffer, currentUser));
-            }
         }
 
         private void DeleteOfferButton_Click(object sender, RoutedEventArgs e)
         {
-            Offer selectedOffer = OffersGrid.SelectedItem as Offer;
-
-            if (selectedOffer == null)
-                return;
-
-            // Vérifier si l'offre a des réservations
-            if (offerService.OfferHasReservations(selectedOffer.Id))
+            var selectedOffer = OffersGrid.SelectedItem as Offer;
+            if (selectedOffer != null)
             {
-                MessageBox.Show("Impossible de supprimer cette offre car elle possède des réservations.");
-                return;
-            }
-
-            // Confirmation
-            var result = MessageBox.Show(
-                "Voulez-vous vraiment supprimer cette offre ?",
-                "Confirmation",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                offerService.DeleteOffer(selectedOffer.Id);
-
-                MessageBox.Show("Offre supprimée.");
-
-                LoadOffers(); // recharge le tableau
+                if (MessageBox.Show("Voulez-vous vraiment supprimer cette offre ?",
+                        "Confirmer", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    offerService.DeleteOffer(selectedOffer.Id);
+                    LoadOffers();
+                }
             }
         }
     }

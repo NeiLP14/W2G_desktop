@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using W2G_desktop.Models;
 using W2G_desktop.Services;
 
@@ -28,31 +27,42 @@ namespace W2G_desktop.Pages
 
         private void UpdateUI()
         {
-            // Seul l'admin peut voir le bouton pour créer une baie
-            CreateBayButton.Visibility = currentUser != null && currentUser.Role.Contains("ROLE_ADMIN")
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+            bool isAdmin = currentUser != null && currentUser.Role.Contains("ROLE_ADMIN");
+
+            // Seul l'admin peut voir le bouton Créer
+            CreateBayButton.Visibility = isAdmin ? Visibility.Visible : Visibility.Collapsed;
+
+            // Seul l'admin peut voir et modifier
+            EditBayButton.Visibility = isAdmin ? Visibility.Visible : Visibility.Collapsed;
+
+            // Les boutons dépendent de la sélection
+            bool hasSelection = BaysGrid.SelectedItem != null;
+            EditBayButton.IsEnabled = isAdmin && hasSelection;
+            ViewUnitsButton.IsEnabled = hasSelection;
         }
 
         private void CreateBayButton_Click(object sender, RoutedEventArgs e)
         {
-            // Naviguer vers la page de création de baie
             NavigationService?.Navigate(new CreateBayPage(currentUser));
         }
 
         private void BaysGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            EditBayButton.IsEnabled = BaysGrid.SelectedItem != null;
+            UpdateUI(); // met à jour les boutons à chaque sélection
         }
 
         private void EditBayButton_Click(object sender, RoutedEventArgs e)
         {
             Bay selectedBay = BaysGrid.SelectedItem as Bay;
-
             if (selectedBay != null)
-            {
                 NavigationService?.Navigate(new EditBayPage(selectedBay));
-            }
+        }
+
+        private void VoirUnits_Click(object sender, RoutedEventArgs e)
+        {
+            Bay selectedBay = BaysGrid.SelectedItem as Bay;
+            if (selectedBay != null)
+                NavigationService?.Navigate(new UnitsPage(selectedBay, currentUser));
         }
     }
 }

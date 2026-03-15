@@ -1,0 +1,38 @@
+﻿<Page x:Class="W2G_desktop.Pages.UnitsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Unités">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titre -->
+        <TextBlock x:Name="BayTitle" Grid.Row="0" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- Tableau des unités -->
+        <DataGrid x:Name="UnitsGrid"
+                  Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  SelectionMode="Single"
+                  Height="300"
+                  Margin="0,0,0,10">
+            
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Position" Binding="{Binding Position}" Width="100"/>
+                <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="100"/>
+                <DataGridTextColumn Header="Occupé" Binding="{Binding IsOccupied}" Width="80"/>
+                <DataGridTextColumn Header="Utilisateur" Binding="{Binding OccupantName}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Boutons sous le tableau -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="Fermer" Width="100" Height="30" Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>

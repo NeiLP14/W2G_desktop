@@ -213,3 +213,64 @@
 * Gestion dynamique des rôles et permissions (table séparée).
 * Notifications ou alertes pour certaines actions (réservations proches, etc.).
 * Export CSV / PDF des listes (utilisateurs, offres, baies, réservations).
+
+---
+
+## 13. Gestion avancée des baies et unités
+
+* **Création d’une baie** (`CreateBayPage`) :
+
+  * Génération automatique du `Label` (`B01`, `B02`, …) basé sur le nombre de baies existantes.
+  * Création automatique des **unités** (`Unit`) associées à la baie, numérotées de `U01` jusqu’à la taille totale de la baie.
+  * Chaque unité possède : `Position`, `BayId`, `IsOccupied` (booléen), `StateId`, `TypeId`, et optionnel `ReservationId`.
+
+* **Modification d’une baie** (`EditBayPage`) :
+
+  * Possibilité d’augmenter ou de réduire la taille.
+  * Si la taille augmente : création automatique des unités manquantes.
+  * Si la taille diminue : suppression impossible des unités occupées, sinon suppression des unités vides en trop.
+  * Validation et messages clairs si l’action est bloquée (MessageBox).
+
+* **Affichage des unités** (`UnitsPage`) :
+
+  * Liste les unités d’une baie sélectionnée avec :
+
+    * `Position`
+    * `Label` (ex : U01, U02…)
+    * `IsOccupied` (booléen, lecture seule)
+    * Nom de l’utilisateur qui occupe l’unité si applicable.
+  * Possibilité de **scroll** vertical dans le tableau pour baies de grande taille.
+  * Bouton “Voir les unités” déplacé **en bas** du tableau pour simplifier l’interface.
+  * Activation du bouton uniquement si une baie est sélectionnée.
+
+* **BaysPage** :
+
+  * Boutons de modification et de visualisation des unités visibles uniquement pour les **admins**.
+  * Boutons désactivés ou masqués pour les utilisateurs standards.
+  * Sélection dans le `DataGrid` active dynamiquement les boutons `Modifier` et `Voir les unités`.
+
+---
+
+## 14. Gestion des offres (permissions)
+
+* **OffresPage** (`OffresPage`) :
+
+  * Boutons `Créer`, `Modifier`, `Supprimer` visibles uniquement pour les **admins**.
+  * Les boutons `Modifier` et `Supprimer` sont activés uniquement si une offre est sélectionnée.
+  * Correction des appels vers `CreateOffrePage` et `EditOfferPage` avec passage du `User` courant pour les permissions.
+  * Les offres sont récupérées via `OfferService.GetAllOffers()`.
+  * Validation côté interface avant création ou modification d’une offre.
+  * MessageBox de confirmation lors de la suppression.
+
+---
+
+## 15. Permissions et UI dynamique
+
+* Tous les boutons liés aux actions sensibles (Créer/Modifier/Supprimer) **s’adaptent automatiquement** au rôle de l’utilisateur (`ROLE_ADMIN`).
+* Les utilisateurs standards peuvent seulement **consulter** les listes :
+
+  * Baies (sans modifier ni supprimer)
+  * Offres (sans modifier ni supprimer)
+  * Réservations
+  * Clients
+* Les admins voient et peuvent interagir avec tous les boutons disponibles.

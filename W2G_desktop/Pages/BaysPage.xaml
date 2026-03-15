@@ -11,13 +11,14 @@
 
         <!-- Tableau des baies -->
         <DataGrid x:Name="BaysGrid"
-                  Grid.Row="0"
-                  IsReadOnly="True"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  SelectionMode="Single"
-                  SelectionChanged="BaysGrid_SelectionChanged"
-                  Margin="0,0,0,10">
+                    Grid.Row="0"
+                    IsReadOnly="True"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    SelectionMode="Single"
+                    SelectionChanged="BaysGrid_SelectionChanged"
+                    Margin="0,0,0,10">
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="150"/>
@@ -27,7 +28,7 @@
 
         <!-- Boutons sous le tableau -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
-            <!-- Bouton créer baie -->
+
             <Button x:Name="CreateBayButton"
                     Content="Créer une baie"
                     Width="150"
@@ -36,13 +37,21 @@
                     Margin="0,0,10,0"
                     Click="CreateBayButton_Click"/>
 
-            <!-- Bouton modifier baie -->
             <Button x:Name="EditBayButton"
                     Content="Modifier"
                     Width="150"
                     Height="30"
+                    Margin="0,0,10,0"
                     IsEnabled="False"
                     Click="EditBayButton_Click"/>
+
+            <Button x:Name="ViewUnitsButton"
+                    Content="Voir les unités"
+                    Width="150"
+                    Height="30"
+                    IsEnabled="False"
+                    Click="VoirUnits_Click"/>
+
         </StackPanel>
     </Grid>
 </Page>

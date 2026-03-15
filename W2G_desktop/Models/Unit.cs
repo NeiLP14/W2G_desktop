@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace W2G_desktop.Models
+﻿namespace W2G_desktop.Models
 {
     public class Unit
     {
         public int Id { get; set; }
+
+        public string Label { get; set; } // U01, U02
 
         public int Position { get; set; }
 
@@ -16,8 +14,13 @@ namespace W2G_desktop.Models
 
         public int StateId { get; set; }
 
-        public int TypeId { get; set; }
+        public int? TypeId { get; set; }
 
         public int? ReservationId { get; set; }
+
+        // propriétés pour affichage
+        public string StateLabel { get; set; }
+
+        public string Username { get; set; }
     }
 }
