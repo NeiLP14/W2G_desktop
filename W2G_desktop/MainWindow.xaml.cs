@@ -42,19 +42,42 @@ namespace W2G_desktop
                 ReservationsButton.Visibility = Visibility.Collapsed;
                 OffersButton.Visibility = Visibility.Collapsed;
                 BaysButton.Visibility = Visibility.Collapsed;
+                Interventions.Visibility = Visibility.Collapsed;
+
+                UserPanel.Visibility = Visibility.Collapsed; // cacher le nom et le bouton déco
                 return;
             }
 
-            // Seul l'admin peut créer des utilisateurs
             UsersButton.Visibility = currentUser.Role.Contains("ROLE_ADMIN")
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 
-            // Tous les utilisateurs connectés voient ces boutons
             CustomersButton.Visibility = Visibility.Visible;
             ReservationsButton.Visibility = Visibility.Visible;
-            OffersButton.Visibility = Visibility.Visible; 
+            OffersButton.Visibility = Visibility.Visible;
             BaysButton.Visibility = Visibility.Visible;
+            Interventions.Visibility = Visibility.Visible;
+
+            // Afficher le panel utilisateur
+            UserPanel.Visibility = Visibility.Visible;
+
+            // Afficher le username
+            CurrentUserTextBlock.Text = currentUser.Username;
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Réinitialiser l'utilisateur courant
+            currentUser = null;
+
+            // Mettre à jour l'interface (boutons + header)
+            UpdateMenu();
+
+            // Revenir à la page de login
+            MainFrame.Navigate(new LoginPage(this));
+
+            // Mettre à jour le titre
+            this.Title = "W2G Desktop";
         }
 
         public void SetCurrentUser(User user)
@@ -105,6 +128,11 @@ namespace W2G_desktop
             {
                 MainFrame.Navigate(new UsersPage(currentUser));
             }
+        }
+
+        private void Interventions_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new InterventionsPage());
         }
     }
 }

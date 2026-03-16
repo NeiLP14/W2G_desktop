@@ -17,7 +17,7 @@ namespace W2G_desktop.Services
                 string query = @"SELECT id, email, role 
                                  FROM user
                                  WHERE email = @email 
-                                 AND password = @password"; // tu peux garder la vérif
+                                 AND password = @password";
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@email", email);
@@ -31,7 +31,7 @@ namespace W2G_desktop.Services
                         {
                             Id = reader.GetInt32("id"),
                             Email = reader.GetString("email"),
-                            Role = reader.GetString("role") // ← récupère le rôle
+                            Role = reader.GetString("role") // récupère le rôle
                         };
                     }
                 }

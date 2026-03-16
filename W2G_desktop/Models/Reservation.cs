@@ -12,7 +12,6 @@
 
         public DateTime DateFin { get; set; }
 
-        // Champs affichés dans le DataGrid
         public string Username { get; set; }
 
         public string Offre { get; set; }
