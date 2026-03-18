@@ -20,5 +20,14 @@ namespace W2G_desktop.Pages
             List<Reservation> reservations = reservationService.GetAllReservations();
             ReservationsGrid.ItemsSource = reservations;
         }
+
+        private void ReservationsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedReservation = ReservationsGrid.SelectedItem as Reservation;
+            if (selectedReservation != null)
+            {
+                // Actions à effectuer lors de la sélection, par ex. activer des boutons
+            }
+        }
     }
 }

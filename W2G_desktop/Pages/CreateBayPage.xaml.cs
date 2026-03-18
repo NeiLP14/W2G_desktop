@@ -36,5 +36,10 @@ namespace W2G_desktop.Pages
                 ErrorTextBlock.Text = "Erreur lors de la création : " + ex.Message;
             }
         }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new BaysPage(currentUser));
+        }
     }
 }

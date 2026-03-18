@@ -7,14 +7,14 @@ namespace W2G_desktop.Services
 {
     public class ReservationService
     {
-        private string connectionString = "server=localhost;database=w2g;uid=root;pwd=;";
+        private Database.Database db = new Database.Database();
 
         // Récupérer toutes les réservations
         public List<Reservation> GetAllReservations()
         {
             List<Reservation> reservations = new List<Reservation>();
 
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = @"
@@ -56,7 +56,7 @@ namespace W2G_desktop.Services
         {
             List<Reservation> reservations = new List<Reservation>();
 
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = @"

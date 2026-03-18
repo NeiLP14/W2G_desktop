@@ -1,57 +1,119 @@
 ﻿<Page x:Class="W2G_desktop.Pages.BaysPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       Title="Baies">
 
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid Background="#EEF1F5" Margin="20">
 
-        <!-- Tableau des baies -->
-        <DataGrid x:Name="BaysGrid"
-                    Grid.Row="0"
-                    IsReadOnly="True"
-                    AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    SelectionMode="Single"
-                    SelectionChanged="BaysGrid_SelectionChanged"
-                    Margin="0,0,0,10">
+        <!-- CARD -->
+        <Border Padding="20"
+                Background="White"
+                CornerRadius="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15"
+                                  ShadowDepth="2"
+                                  Opacity="0.2"/>
+            </Border.Effect>
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
-                <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="150"/>
-                <DataGridTextColumn Header="Taille" Binding="{Binding Size}" Width="100"/>
-            </DataGrid.Columns>
-        </DataGrid>
+            <StackPanel>
 
-        <!-- Boutons sous le tableau -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                <!-- HEADER -->
+                <TextBlock Text="Gestion des baies"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Margin="0,0,0,15"/>
 
-            <Button x:Name="CreateBayButton"
-                    Content="Créer une baie"
-                    Width="150"
-                    Height="30"
-                    Visibility="Collapsed"
-                    Margin="0,0,10,0"
-                    Click="CreateBayButton_Click"/>
+                <!-- DATAGRID -->
+                <DataGrid x:Name="BaysGrid"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          SelectionMode="Single"
+                          GridLinesVisibility="None"
+                          RowHeight="35"
+                          BorderThickness="0"
+                          MaxHeight="400"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          SelectionChanged="BaysGrid_SelectionChanged">
 
-            <Button x:Name="EditBayButton"
-                    Content="Modifier"
-                    Width="150"
-                    Height="30"
-                    Margin="0,0,10,0"
-                    IsEnabled="False"
-                    Click="EditBayButton_Click"/>
+                    <!-- STYLE HEADER -->
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Background" Value="#F1F5F9"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
 
-            <Button x:Name="ViewUnitsButton"
-                    Content="Voir les unités"
-                    Width="150"
-                    Height="30"
-                    IsEnabled="False"
-                    Click="VoirUnits_Click"/>
+                    <!-- STYLE ROWS -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EDF2F7"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#2563EB"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
 
-        </StackPanel>
+                    <!-- COLONNES -->
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                        <DataGridTextColumn Header="Label" Binding="{Binding Label}" Width="*"/>
+                        <DataGridTextColumn Header="Taille" Binding="{Binding Size}" Width="120"/>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+
+                <!-- BOUTONS -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
+
+                    <!-- Créer une baie -->
+                    <Button x:Name="CreateBayButton"
+                            Content="💾 Créer"
+                            Height="40"
+                            Width="160"
+                            Margin="0,0,10,0"
+                            FontWeight="Bold"
+                            Style="{DynamicResource MahApps.Metro.Styles.Button.Accent}"
+                            Visibility="Collapsed"
+                            Click="CreateBayButton_Click"/>
+
+                    <!-- Modifier -->
+                    <Button x:Name="EditBayButton"
+                            Content="✏️ Modifier"
+                            Height="40"
+                            Width="160"
+                            Margin="0,0,10,0"
+                            FontWeight="Bold"
+                            Style="{DynamicResource MahApps.Metro.Styles.Button.Flat}"
+                            IsEnabled="False"
+                            Click="EditBayButton_Click"/>
+
+                    <!-- Voir les unités en vert -->
+                    <Button x:Name="ViewUnitsButton"
+                            Content="📦 Voir les unités"
+                            Height="40"
+                            Width="160"
+                            FontWeight="Bold"
+                            Style="{DynamicResource MahApps.Metro.Styles.Button.Success}"
+                            IsEnabled="False"
+                            Click="VoirUnits_Click"/>
+
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

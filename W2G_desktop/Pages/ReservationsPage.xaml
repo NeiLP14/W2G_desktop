@@ -1,29 +1,86 @@
 ﻿<Page x:Class="W2G_desktop.Pages.ReservationsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       Title="Réservations">
 
-    <Grid Margin="10">
+    <Grid Background="#EEF1F5" Margin="20">
 
-        <DataGrid x:Name="ReservationsGrid"
-                  IsReadOnly="True"
-                  AutoGenerateColumns="False">
+        <!-- CARD -->
+        <Border Padding="20"
+                Background="White"
+                CornerRadius="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15"
+                                  ShadowDepth="2"
+                                  Opacity="0.2"/>
+            </Border.Effect>
 
-            <DataGrid.Columns>
+            <StackPanel>
 
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                <!-- HEADER -->
+                <TextBlock Text="Liste des réservations"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Margin="0,0,0,15"/>
 
-                <DataGridTextColumn Header="Client" Binding="{Binding Username}" Width="250"/>
+                <!-- DATAGRID -->
+                <DataGrid x:Name="ReservationsGrid"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          SelectionMode="Single"
+                          GridLinesVisibility="None"
+                          RowHeight="35"
+                          BorderThickness="0"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          SelectionChanged="ReservationsGrid_SelectionChanged">
 
-                <DataGridTextColumn Header="Offre" Binding="{Binding Offre}" Width="150"/>
+                    <!-- STYLE HEADER -->
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Setter Property="Background" Value="#F1F5F9"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
 
-                <DataGridTextColumn Header="Début" Binding="{Binding DateDeb}" Width="150"/>
+                    <!-- STYLE ROW -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Height" Value="35"/>
+                            <Style.Triggers>
+                                <!-- Hover -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#EDF2F7"/>
+                                </Trigger>
+                                <!-- Sélection -->
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#2563EB"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
 
-                <DataGridTextColumn Header="Fin" Binding="{Binding DateFin}" Width="150"/>
+                    <!-- COLONNES -->
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                        <DataGridTextColumn Header="Client" Binding="{Binding Username}" Width="250"/>
+                        <DataGridTextColumn Header="Offre" Binding="{Binding Offre}" Width="150"/>
+                        <DataGridTextColumn Header="Début" Binding="{Binding DateDeb}" Width="150"/>
+                        <DataGridTextColumn Header="Fin" Binding="{Binding DateFin}" Width="150"/>
+                    </DataGrid.Columns>
 
-            </DataGrid.Columns>
+                </DataGrid>
 
-        </DataGrid>
-
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

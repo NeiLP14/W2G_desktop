@@ -1,10 +1,11 @@
 ﻿using System.Windows;
 using W2G_desktop.Models;
 using W2G_desktop.Pages;
+using MahApps.Metro.Controls;
 
 namespace W2G_desktop
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private User currentUser;
 

@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using W2G_desktop.Models;
+using W2G_desktop.Database;
 
 namespace W2G_desktop.Services
 {
     public class OfferService
     {
-        private string connectionString = "server=localhost;database=w2g;uid=root;pwd=;";
+        private Database.Database db = new Database.Database();
 
         public List<Offer> GetAllOffers()
         {
             List<Offer> offers = new List<Offer>();
 
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = @"
@@ -50,7 +51,7 @@ namespace W2G_desktop.Services
         // ⚡ Nouvelle méthode pour créer une offre
         public void CreateOffer(Offer offer)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = "INSERT INTO offre (label, nb_unit, price, reduction) VALUES (@Label, @NbUnit, @Price, @Reduction)";
@@ -66,7 +67,7 @@ namespace W2G_desktop.Services
 
         public void UpdateOffer(Offer offer)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = @"UPDATE offre 
@@ -89,7 +90,7 @@ namespace W2G_desktop.Services
 
         public bool OfferHasReservations(int offerId)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = "SELECT COUNT(*) FROM reservation WHERE offre_id = @OfferId";
@@ -104,7 +105,7 @@ namespace W2G_desktop.Services
 
         public void DeleteOffer(int offerId)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = "DELETE FROM offre WHERE id = @Id";

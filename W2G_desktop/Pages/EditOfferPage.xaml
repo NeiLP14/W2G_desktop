@@ -1,28 +1,109 @@
 ﻿<Page x:Class="W2G_desktop.Pages.EditOfferPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       Title="Modifier Offre">
 
-    <Grid Margin="20">
-        <StackPanel>
+    <Grid Background="#EEF1F5">
 
-            <TextBlock Text="Label"/>
-            <TextBox x:Name="LabelTextBox" Width="200"/>
+        <!-- CARD -->
+        <Border Width="400"
+                Padding="25"
+                Background="White"
+                CornerRadius="10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15"
+                                  ShadowDepth="2"
+                                  Opacity="0.2"/>
+            </Border.Effect>
 
-            <TextBlock Text="Unités" Margin="0,10,0,0"/>
-            <TextBox x:Name="NbUnitTextBox" Width="200"/>
+            <StackPanel>
 
-            <TextBlock Text="Prix" Margin="0,10,0,0"/>
-            <TextBox x:Name="PriceTextBox" Width="200"/>
+                <!-- HEADER -->
+                <TextBlock Text="Modifier Offre"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"
+                           HorizontalAlignment="Center"/>
 
-            <TextBlock Text="Réduction (%)" Margin="0,10,0,0"/>
-            <TextBox x:Name="ReductionTextBox" Width="200"/>
+                <!-- LABEL -->
+                <TextBlock Text="Label" FontWeight="SemiBold"/>
+                <Grid Margin="0,5,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconMaterial Kind="Tag" Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="LabelTextBox"
+                             Grid.Column="1"
+                             Height="35"
+                             VerticalContentAlignment="Center"/>
+                </Grid>
 
-            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                <Button Content="Sauvegarder" Width="120" Click="SaveButton_Click" Margin="0,0,10,0"/>
-                <Button Content="Annuler" Width="120" Click="CancelButton_Click"/>
+                <!-- UNITES -->
+                <TextBlock Text="Unités" FontWeight="SemiBold"/>
+                <Grid Margin="0,5,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconMaterial Kind="Counter" Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="NbUnitTextBox"
+                             Grid.Column="1"
+                             Height="35"
+                             VerticalContentAlignment="Center"/>
+                </Grid>
+
+                <!-- PRIX -->
+                <TextBlock Text="Prix (€)" FontWeight="SemiBold"/>
+                <Grid Margin="0,5,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconMaterial Kind="CurrencyEur" Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="PriceTextBox"
+                             Grid.Column="1"
+                             Height="35"
+                             VerticalContentAlignment="Center"/>
+                </Grid>
+
+                <!-- REDUCTION -->
+                <TextBlock Text="Réduction (%)" FontWeight="SemiBold"/>
+                <Grid Margin="0,5,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconMaterial Kind="Percent" Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="ReductionTextBox"
+                             Grid.Column="1"
+                             Height="35"
+                             VerticalContentAlignment="Center"/>
+                </Grid>
+
+                <!-- BOUTONS -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                    <Button Content="💾 Sauvegarder"
+                            Width="120"
+                            Height="40"
+                            FontWeight="Bold"
+                            Style="{DynamicResource MahApps.Metro.Styles.Button.Accent}"
+                            Click="SaveButton_Click"
+                            Margin="0,0,10,0"/>
+
+                    <Button Content="❌ Annuler"
+                            Width="120"
+                            Height="40"
+                            FontWeight="Bold"
+                            Style="{DynamicResource MahApps.Metro.Styles.Button.Flat}"
+                            Click="CancelButton_Click"/>
+                </StackPanel>
+
             </StackPanel>
-
-        </StackPanel>
+        </Border>
     </Grid>
 </Page>

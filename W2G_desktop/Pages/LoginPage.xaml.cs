@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System.Text.Json;
+using System.Text.Json;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using W2G_desktop.Models;
 using W2G_desktop.Services;
 
@@ -29,14 +32,32 @@ namespace W2G_desktop.Pages
                 return;
             }
 
-            if (!(user.Role.Contains("ROLE_ADMIN") || user.Role.Contains("ROLE_TECHNICIAN") || user.Role.Contains("ROLE_ACCOUNTANT")))
+            var roles = JsonSerializer.Deserialize<List<string>>(user.Role);
+
+            if (!(roles.Contains("ROLE_ADMIN") ||
+                  roles.Contains("ROLE_TECHNICIAN") ||
+                  roles.Contains("ROLE_ACCOUNTANT")))
             {
                 ErrorTextBlock.Text = "Vous n'êtes pas autorisé à vous connecter.";
                 return;
             }
 
-            // Connexion réussie, informer la MainWindow
             mainWindow.SetCurrentUser(user);
+        }
+
+        private void InputChanged(object sender, RoutedEventArgs e)
+        {
+            LoginButton.IsEnabled =
+                !string.IsNullOrWhiteSpace(EmailTextBox.Text) &&
+                !string.IsNullOrWhiteSpace(PasswordBox.Password);
+        }
+
+        private void Page_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter && LoginButton.IsEnabled)
+            {
+                LoginButton_Click(null, null);
+            }
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using W2G_desktop.Models;
-using W2G_desktop.Services;
 using W2G_desktop.Pages;
+using W2G_desktop.Services;
 
 namespace W2G_desktop.Pages
 {
@@ -53,6 +54,12 @@ namespace W2G_desktop.Pages
             {
                 ErrorTextBlock.Text = "Erreur lors de la création : " + ex.Message;
             }
+        }
+
+        private void Page_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                CreateButton_Click(null, null);
         }
     }
 }

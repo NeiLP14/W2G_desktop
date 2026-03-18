@@ -7,21 +7,22 @@ namespace W2G_desktop.Services
 {
     public class UserService
     {
-        private string connectionString = "server=localhost;database=w2g;uid=root;pwd=;";
+        private Database.Database db = new Database.Database();
 
         public User Authenticate(string email, string password)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
-            string query = "SELECT * FROM user WHERE email=@Email LIMIT 1";
+            string query = "SELECT * FROM user WHERE LOWER(email)=LOWER(@Email) LIMIT 1";
             var cmd = new MySqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@Email", email);
+            cmd.Parameters.AddWithValue("@Email", email.Trim());
 
             using var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
                 string hash = reader.GetString("password");
+
                 if (BCrypt.Net.BCrypt.Verify(password, hash))
                 {
                     return new User
@@ -40,7 +41,7 @@ namespace W2G_desktop.Services
 
         public bool EmailExists(string email)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
             string query = "SELECT COUNT(*) FROM user WHERE email=@Email";
             var cmd = new MySqlCommand(query, conn);
@@ -51,7 +52,7 @@ namespace W2G_desktop.Services
         public List<User> GetCustomers()
         {
             var customers = new List<User>();
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = "SELECT id, email, username, roles, discr FROM user WHERE discr='customer' OR discr='company'";
@@ -77,7 +78,7 @@ namespace W2G_desktop.Services
         {
             var users = new List<User>();
 
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = "SELECT id, email, username, roles, discr FROM user";
@@ -123,7 +124,7 @@ namespace W2G_desktop.Services
                     break;
             }
 
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = "INSERT INTO user (email, username, password, roles, discr) VALUES (@Email, @Username, @Password, @Roles, @Discr)";
@@ -144,7 +145,7 @@ namespace W2G_desktop.Services
 
         public bool UpdateUser(User user)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             string query = @"UPDATE user 
@@ -166,7 +167,7 @@ namespace W2G_desktop.Services
 
         public bool DeleteUser(int userId)
         {
-            using var conn = new MySqlConnection(connectionString);
+            using var conn = db.GetConnection();
             conn.Open();
 
             using var transaction = conn.BeginTransaction();
