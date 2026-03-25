@@ -44,12 +44,18 @@ namespace W2G_desktop
                 OffersButton.Visibility = Visibility.Collapsed;
                 BaysButton.Visibility = Visibility.Collapsed;
                 Interventions.Visibility = Visibility.Collapsed;
+                Reporting.Visibility = Visibility.Collapsed;
 
-                UserPanel.Visibility = Visibility.Collapsed; // cacher le nom et le bouton déco
+                UserPanel.Visibility = Visibility.Collapsed;
                 return;
             }
 
-            UsersButton.Visibility = currentUser.Role.Contains("ROLE_ADMIN")
+            bool isAdmin = currentUser.Role.Contains("ROLE_ADMIN");
+            bool isAccountant = currentUser.Role.Contains("ROLE_ACCOUNTANT");
+
+            UsersButton.Visibility = isAdmin ? Visibility.Visible : Visibility.Collapsed;
+
+            Reporting.Visibility = (isAdmin || isAccountant)
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 
@@ -59,10 +65,7 @@ namespace W2G_desktop
             BaysButton.Visibility = Visibility.Visible;
             Interventions.Visibility = Visibility.Visible;
 
-            // Afficher le panel utilisateur
             UserPanel.Visibility = Visibility.Visible;
-
-            // Afficher le username
             CurrentUserTextBlock.Text = currentUser.Username;
         }
 
@@ -134,6 +137,11 @@ namespace W2G_desktop
         private void Interventions_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new InterventionsPage());
+        }
+
+        private void Reporting_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Reporting());
         }
     }
 }

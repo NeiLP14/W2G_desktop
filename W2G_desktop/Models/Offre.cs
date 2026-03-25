@@ -17,5 +17,7 @@ namespace W2G_desktop.Models
         public int Reduction { get; set; }
 
         public int NbReservations { get; set; }
+
+        public bool archive { get; set; }
     }
 }

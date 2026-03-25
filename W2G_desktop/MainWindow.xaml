@@ -116,6 +116,15 @@
                 </StackPanel>
             </Button>
 
+            <Button x:Name="Reporting"
+                    Style="{StaticResource SidebarButtonStyle}"
+                    Click="Reporting_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Tools" Width="20" Margin="0,0,10,0"/>
+                        <TextBlock Text="Reporting"/>
+                    </StackPanel>
+            </Button>
+
         </StackPanel>
 
         <!-- CONTENU -->
