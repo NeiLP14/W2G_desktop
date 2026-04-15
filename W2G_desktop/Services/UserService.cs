@@ -1,6 +1,7 @@
-﻿using MySql.Data.MySqlClient;
-using BCrypt.Net;
+﻿using BCrypt.Net;
+using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using System.Text.Json;
 using W2G_desktop.Models;
 
 namespace W2G_desktop.Services
@@ -106,37 +107,35 @@ namespace W2G_desktop.Services
             if (EmailExists(email))
                 return false;
 
-            // Déterminer le discr automatiquement selon le rôle
-            string discr;
-            switch (role)
+            role = role?.Trim();
+
+            // 🎯 Déterminer le discr
+            string discr = role switch
             {
-                case "ROLE_ADMIN":
-                    discr = "admin";
-                    break;
-                case "ROLE_TECHNICIAN":
-                    discr = "technician";
-                    break;
-                case "ROLE_ACCOUNTANT":
-                    discr = "accountant";
-                    break;
-                default:
-                    discr = "staff"; // fallback si un rôle inconnu est passé
-                    break;
-            }
+                "ROLE_ADMIN" => "admin",
+                "ROLE_TECHNICIAN" => "technician",
+                "ROLE_ACCOUNTANT" => "accountant",
+                _ => "staff"
+            };
 
             using var conn = db.GetConnection();
             conn.Open();
 
-            string query = "INSERT INTO user (email, username, password, roles, discr) VALUES (@Email, @Username, @Password, @Roles, @Discr)";
+            string query = @"INSERT INTO user (email, username, password, roles, discr) 
+                     VALUES (@Email, @Username, @Password, @Roles, @Discr)";
+
             using var cmd = new MySqlCommand(query, conn);
 
-            // Hash du mot de passe
+            // 🔐 Hash password
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+
+            // ✅ JSON propre
+            var rolesList = new List<string> { role };
+            string jsonRole = JsonSerializer.Serialize(rolesList);
 
             cmd.Parameters.AddWithValue("@Email", email);
             cmd.Parameters.AddWithValue("@Username", username);
             cmd.Parameters.AddWithValue("@Password", hashedPassword);
-            string jsonRole = $"\"{role}\""; // stocker en JSON si tu le fais pour tous les rôles
             cmd.Parameters.AddWithValue("@Roles", jsonRole);
             cmd.Parameters.AddWithValue("@Discr", discr);
 
@@ -149,17 +148,34 @@ namespace W2G_desktop.Services
             conn.Open();
 
             string query = @"UPDATE user 
-                            SET email = @Email,
-                                username = @Username,
-                                roles = @Roles,
-                                discr = @Discr
-                            WHERE id = @Id";
+                     SET email = @Email,
+                         username = @Username,
+                         roles = @Roles,
+                         discr = @Discr
+                     WHERE id = @Id";
 
             using var cmd = new MySqlCommand(query, conn);
+
+            // 🎯 Nettoyage du rôle
+            string role = user.Role?.Trim();
+
+            // 🎯 Recalcul du discr (important si rôle changé)
+            string discr = role switch
+            {
+                "ROLE_ADMIN" => "admin",
+                "ROLE_TECHNICIAN" => "technician",
+                "ROLE_ACCOUNTANT" => "accountant",
+                _ => "staff"
+            };
+
+            // ✅ JSON propre
+            var rolesList = new List<string> { role };
+            string jsonRole = JsonSerializer.Serialize(rolesList);
+
             cmd.Parameters.AddWithValue("@Email", user.Email);
             cmd.Parameters.AddWithValue("@Username", user.Username);
-            cmd.Parameters.AddWithValue("@Roles", $"\"{user.Role}\""); // JSON comme avant
-            cmd.Parameters.AddWithValue("@Discr", user.Discr);
+            cmd.Parameters.AddWithValue("@Roles", jsonRole);
+            cmd.Parameters.AddWithValue("@Discr", discr);
             cmd.Parameters.AddWithValue("@Id", user.Id);
 
             return cmd.ExecuteNonQuery() > 0;
