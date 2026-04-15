@@ -7,7 +7,7 @@ namespace W2G_desktop.Services
 {
     public class InterventionService
     {
-        private Database.Database db = new Database.Database(); 
+        private Database.Database db = new Database.Database();
 
         public List<Intervention> GetAllInterventions()
         {
@@ -39,20 +39,48 @@ namespace W2G_desktop.Services
                 using (var cmd = new MySqlCommand(query, conn))
                 using (var reader = cmd.ExecuteReader())
                 {
+                    // Récupération des index (optimisation)
+                    int ordId = reader.GetOrdinal("id");
+                    int ordDateDeb = reader.GetOrdinal("date_deb");
+                    int ordDateFin = reader.GetOrdinal("date_fin");
+                    int ordDescription = reader.GetOrdinal("description");
+                    int ordTechnician = reader.GetOrdinal("technician");
+                    int ordUnitLabel = reader.GetOrdinal("unit_label");
+                    int ordPosition = reader.GetOrdinal("position");
+                    int ordBayLabel = reader.GetOrdinal("bay_label");
+                    int ordType = reader.GetOrdinal("type_intervention");
+
                     while (reader.Read())
                     {
-                        interventions.Add(new Intervention
+                        var intervention = new Intervention
                         {
-                            Id = reader.GetInt32("id"),
-                            DateDeb = reader.GetDateTime("date_deb"),
-                            DateFin = reader.GetDateTime("date_fin"),
-                            Description = reader.GetString("description"),
-                            Technician = reader.GetString("technician"),
-                            UnitLabel = reader.GetString("unit_label"),
-                            UnitPosition = reader.GetInt32("position"),
-                            BayLabel = reader.GetString("bay_label"),
-                            TypeIntervention = reader.GetString("type_intervention")
-                        });
+                            Id = reader.GetInt32(ordId),
+                            DateDeb = reader.GetDateTime(ordDateDeb),
+                            DateFin = reader.GetDateTime(ordDateFin),
+                            Description = reader.GetString(ordDescription),
+
+                            Technician = reader.IsDBNull(ordTechnician)
+                                ? null
+                                : reader.GetString(ordTechnician),
+
+                            UnitLabel = reader.IsDBNull(ordUnitLabel)
+                                ? null
+                                : reader.GetString(ordUnitLabel),
+
+                            UnitPosition = reader.IsDBNull(ordPosition)
+                                ? null
+                                : reader.GetInt32(ordPosition),
+
+                            BayLabel = reader.IsDBNull(ordBayLabel)
+                                ? null
+                                : reader.GetString(ordBayLabel),
+
+                            TypeIntervention = reader.IsDBNull(ordType)
+                                ? null
+                                : reader.GetString(ordType)
+                        };
+
+                        interventions.Add(intervention);
                     }
                 }
             }
